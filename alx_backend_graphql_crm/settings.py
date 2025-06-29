@@ -47,6 +47,7 @@ GRAPHENE = {
     'SCHEMA': 'alx_backend_graphql_crm.schema.schema'
 }
 
+AUTH_USER_MODEL = 'crm.Customer'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
