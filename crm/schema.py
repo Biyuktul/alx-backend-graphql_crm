@@ -7,6 +7,9 @@ from graphql import GraphQLError
 from decimal import Decimal
 from django.utils import timezone
 from django.db import transaction
+from graphene_django.filter import DjangoFilterConnectionField
+from .filters import CustomerFilter, ProductFilter, OrderFilter
+from graphene import relay
 
 # ----------------------
 # GraphQL TYPES
@@ -17,7 +20,15 @@ class CustomerType(DjangoObjectType):
 
     class Meta:
         model = Customer
-        fields = '__all__'
+        interfaces = (relay.Node,)
+
+        filter_fields = {
+            'email': ['icontains'],
+            'first_name': ['icontains'],
+            'created_at': ['gte', 'lte'],
+            'phone': ['icontains'],
+        }
+
 
     def resolve_name(self, info):
         return f"{self.first_name} {self.last_name}".strip()
@@ -25,12 +36,26 @@ class CustomerType(DjangoObjectType):
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
-        fields = '__all__'
+        interfaces = (relay.Node,)
+
+        filter_fields = {
+            'name': ['icontains'],
+            'price': ['gte', 'lte'],
+            'stock': ['gte', 'lte'],
+        }
 
 class OrderType(DjangoObjectType):
     class Meta:
         model = Order
-        fields = '__all__'
+        interfaces = (relay.Node,)
+
+        filter_fields = {
+            'total_amount': ['gte', 'lte'],
+            'order_date': ['gte', 'lte'],
+            'customer__first_name': ['icontains'],
+            'products__name': ['icontains'],
+            'products__id': ['exact'],
+        }
 
 # ----------------------
 # INPUT TYPES
@@ -170,18 +195,13 @@ class CreateOrder(graphene.Mutation):
 # ----------------------
 
 class Query(graphene.ObjectType):
-    customers = graphene.List(CustomerType)
-    products = graphene.List(ProductType)
-    orders = graphene.List(OrderType)
+    all_customers = DjangoFilterConnectionField(CustomerType, filterset_class=CustomerFilter)
+    all_products = DjangoFilterConnectionField(ProductType, filterset_class=ProductFilter)
+    all_orders = DjangoFilterConnectionField(OrderType, filterset_class=OrderFilter)
 
-    def resolve_customers(self, info):
-        return Customer.objects.all()
-
-    def resolve_products(self, info):
-        return Product.objects.all()
-
-    def resolve_orders(self, info):
-        return Order.objects.all()
+    customers = all_customers
+    products = all_products
+    orders = all_orders
 
 class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()
