@@ -1,8 +1,19 @@
 #!/bin/bash
 
-cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+cwd=$(pwd)
 
-pwd
+# Change to the script directory
+cd "$(dirname "${BASH_SOURCE[0]}")" || {
+  echo "Failed to cd to script directory"
+  exit 1
+}
+
+if [ -d "crm/tmp" ]; then
+  echo "Directory crm/tmp exists."
+else
+  echo "Directory crm/tmp does not exist. Creating..."
+  mkdir -p crm/tmp
+fi
 
 python manage.py shell <<EOF
 from datetime import timedelta
