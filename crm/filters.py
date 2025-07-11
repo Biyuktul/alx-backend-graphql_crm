@@ -53,6 +53,7 @@ class OrderFilter(django_filters.FilterSet):
     customer_name = django_filters.CharFilter(method='filter_customer_name')
     product_name = django_filters.CharFilter(method='filter_product_name')
     product_id = django_filters.UUIDFilter(method='filter_product_id')
+    status = django_filters.CharFilter(field_name='status', lookup_expr='exact')
     order_by = OrderingFilter(
         fields=(
             ('created_at', 'order_date'),

@@ -50,9 +50,11 @@ class OrderType(DjangoObjectType):
         interfaces = (relay.Node,)
 
         filter_fields = {
+            'status': ['exact'],
             'total_amount': ['gte', 'lte'],
-            'order_date': ['gte', 'lte'],
+            'order_date': ['gte', 'lte', 'exact', 'range'],
             'customer__first_name': ['icontains'],
+            'customer__email': ['icontains'],
             'products__name': ['icontains'],
             'products__id': ['exact'],
         }
