@@ -192,6 +192,34 @@ class CreateOrder(graphene.Mutation):
         order.products.set(products)
         return CreateOrder(order=order)
 
+class UpdateLowStockProducts(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        input = ProductInput(required=True)
+
+    product = graphene.Field(ProductType)
+    message = graphene.String()
+
+    def mutate(self, info, name, input):
+        try:
+            product = Product.objects.get(name=name)
+        except Product.DoesNotExist:
+            raise GraphQLError("Product with that name does not exist!!")
+
+        product.name = input.name
+        product.price = input.price
+        product.stock = input.stock
+
+        #Update Stock levels
+        if product.stock < 10:
+            product.stock += 10
+        
+        product.save()
+        return UpdateLowStockProducts(
+            product=product,
+            message="Product updated (Stock bumped if below 10)."
+            )
+
 # ----------------------
 # ROOT QUERY + MUTATION
 # ----------------------
@@ -210,3 +238,4 @@ class Mutation(graphene.ObjectType):
     bulk_create_customers = BulkCreateCustomers.Field()
     create_product = CreateProduct.Field()
     create_order = CreateOrder.Field()
+    update_low_stock_products = UpdateLowStockProducts.Field()

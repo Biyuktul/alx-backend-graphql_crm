@@ -17,6 +17,7 @@ fh.setFormatter(formatter)
 if not logger.handlers:
     logger.addHandler(fh)
 
+#Query the Hello endpoint
 transport = RequestsHTTPTransport(url='http://localhost:8000/graphql/')
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
