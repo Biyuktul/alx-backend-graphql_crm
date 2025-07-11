@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+
+pwd
+
 python manage.py shell <<EOF
 from datetime import timedelta
 from django.utils import timezone
