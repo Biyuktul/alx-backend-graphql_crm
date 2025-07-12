@@ -4,6 +4,7 @@ import django
 import random
 from faker import Faker
 from decimal import Decimal
+import uuid
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alx_backend_graphql_crm.settings")
 django.setup()
@@ -25,6 +26,7 @@ def seed_customers(n=50):
             phone=fake.phone_number()
         )
 
+
 def seed_products(n=50):
     print(f"Seeding {n} products...")
     for _ in range(n):
@@ -32,9 +34,9 @@ def seed_products(n=50):
         Product.objects.create(
             name=name,
             slug=f"{name.lower().replace(' ', '-')}-{random.randint(1000, 9999)}",
-            sku=f"SKU-{random.randint(1000, 9999)}",
+            sku = f"SKU-{uuid.uuid4().hex[:8]}",
             price=round(Decimal(random.uniform(10.00, 1000.00)), 2),
-            stock=random.randint(0, 50),
+            stock=random.randint(0, 5),
             category=fake.word().capitalize()
         )
 

@@ -194,31 +194,26 @@ class CreateOrder(graphene.Mutation):
 
 class UpdateLowStockProducts(graphene.Mutation):
     class Arguments:
-        name = graphene.String(required=True)
-        input = ProductInput(required=True)
+        restock_amount = graphene.Int(default_value=10)
 
-    product = graphene.Field(ProductType)
+    updated_products = graphene.List(ProductType)
     message = graphene.String()
 
-    def mutate(self, info, name, input):
-        try:
-            product = Product.objects.get(name=name)
-        except Product.DoesNotExist:
-            raise GraphQLError("Product with that name does not exist!!")
+    def mutate(self, info, restock_amount):
+        low_stock_products = Product.objects.filter(stock__lt=10)
 
-        product.name = input.name
-        product.price = input.price
-        product.stock = input.stock
+        updated_products = []
 
-        #Update Stock levels
-        if product.stock < 10:
-            product.stock += 10
-        
-        product.save()
+        for product in low_stock_products:
+            product.stock += restock_amount
+            product.save()
+            updated_products.append(product)
+
         return UpdateLowStockProducts(
-            product=product,
-            message="Product updated (Stock bumped if below 10)."
-            )
+            updated_products=updated_products,
+            message=f"{updated_products} products restocked by {restock_amount} units"
+        )
+
 
 # ----------------------
 # ROOT QUERY + MUTATION
