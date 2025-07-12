@@ -10,6 +10,7 @@ from django.db import transaction
 from graphene_django.filter import DjangoFilterConnectionField
 from .filters import CustomerFilter, ProductFilter, OrderFilter
 from graphene import relay
+from django.db.models import Sum
 
 # ----------------------
 # GraphQL TYPES
@@ -227,6 +228,19 @@ class Query(graphene.ObjectType):
     customers = all_customers
     products = all_products
     orders = all_orders
+
+    total_customers = graphene.Int()
+    total_orders = graphene.Int()
+    total_revenue = graphene.Float()
+
+    def resolve_total_customers(self, info):
+        return Customer.objects.count()
+
+    def resolve_total_orders(self, info):
+        return Order.objects.count()
+
+    def resolve_total_revenue(self, info):
+        return Order.objects.aggregate(total=Sum('total_amount'))['total'] or 0.0
 
 class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()

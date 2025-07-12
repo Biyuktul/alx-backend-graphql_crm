@@ -1,7 +1,9 @@
 amqp==5.3.1
 anyio==4.5.2
 asgiref==3.8.1
+async-timeout==5.0.1
 backoff==2.2.1
+backports.zoneinfo==0.2.1
 billiard==4.2.1
 celery==5.5.3
 certifi==2025.7.9
@@ -36,6 +38,7 @@ pycodestyle==2.12.1
 pyflakes==3.2.0
 python-crontab==3.2.0
 python-dateutil==2.9.0.post0
+redis==6.1.1
 requests==2.32.4
 requests-toolbelt==1.0.0
 six==1.17.0

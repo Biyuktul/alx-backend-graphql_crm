@@ -8,7 +8,7 @@ sys.path.append(str(BASE_DIR))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'alx_backend_graphql_crm.settings')
 
-app = Celery('alx_travel_app', broker='amqp://root:root@localhost:5672/myvhost')  #Use Env Variables for production
+app = Celery('alx_backend_graphql_crm', broker='redis://localhost:6379/0')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
