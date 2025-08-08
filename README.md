@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # alx-backend-graphql_crm
 
 # `Learning Objectives`
@@ -12,3 +13,6 @@
 `Use tools like GraphiQL or Insomnia to interact with GraphQL endpoints.`
 
 `Follow best practices to design scalable and secure GraphQL APIs.`
+=======
+GraphQL introduction
+>>>>>>> c20d1e25744fd80c0dc588c1a66b8780e112a3ae

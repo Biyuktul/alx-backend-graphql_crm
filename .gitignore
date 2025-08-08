@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -31,3 +32,7 @@ staticfiles/
 
 # Pytest cache
 .pytest_cache/
+=======
+*.pyc
+*.sqlite3
+>>>>>>> c20d1e25744fd80c0dc588c1a66b8780e112a3ae
